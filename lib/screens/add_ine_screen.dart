@@ -7,9 +7,10 @@ import '../services/api_service.dart';
 import '../utils/validators.dart';
 
 class AddIneScreen extends StatefulWidget {
-  const AddIneScreen({Key? key}) : super(key: key);
+  const AddIneScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddIneScreenState createState() => _AddIneScreenState();
 }
 
@@ -66,7 +67,7 @@ class _AddIneScreenState extends State<AddIneScreen> {
                   name: 'birth_date',
                   inputType: InputType.date,
                   decoration: InputDecoration(labelText: 'Fecha de nacimiento'),
-                  validator: Validators.requiredValidator,
+                  //validator: Validators.requiredValidator,
                 ),
                 SizedBox(height: 16),
 
@@ -118,7 +119,7 @@ class _AddIneScreenState extends State<AddIneScreen> {
                   name: 'expiration_date',
                   inputType: InputType.date,
                   decoration: InputDecoration(labelText: 'Fecha de vigencia'),
-                  validator: Validators.requiredValidator,
+                  //validator: Validators.requiredValidator(value: 'Fecha requerida'),
                 ),
                 SizedBox(height: 16),
 

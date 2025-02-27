@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'add_ine_screen.dart';
 import 'ine_detail_screen.dart';
 import '../providers/ine_provider.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
+
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class RegisterScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormBuilderState>();
@@ -32,7 +33,7 @@ class RegisterScreen extends StatelessWidget {
                 name: 'password',
                 decoration: InputDecoration(labelText: 'Contraseña'),
                 obscureText: true,
-                validator: Validators.passwordValidator,
+                //validator: Validators.passwordValidator,
               ),
               SizedBox(height: 16),
 
@@ -60,8 +61,8 @@ class RegisterScreen extends StatelessWidget {
                     // Registrar al usuario
                     try {
                       final success = await AuthService.register(
-                        formData['username'],
-                        formData['password'],
+                        formData['username'], // Este valor se enviará como 'user_name'
+                        formData['password'], // Este valor se enviará como 'user_password'
                       );
 
                       if (success) {
@@ -87,6 +88,7 @@ class RegisterScreen extends StatelessWidget {
                     }
                   }
                 },
+
                 child: Text('Registrarse'),
               ),
             ],
