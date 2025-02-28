@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
-import '../utils/validators.dart';
-
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import '../services/auth_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormBuilderState>();
@@ -24,7 +22,12 @@ class RegisterScreen extends StatelessWidget {
               FormBuilderTextField(
                 name: 'username',
                 decoration: InputDecoration(labelText: 'Nombre de usuario'),
-                validator: Validators.requiredValidator,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es obligatorio';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
 
@@ -33,7 +36,15 @@ class RegisterScreen extends StatelessWidget {
                 name: 'password',
                 decoration: InputDecoration(labelText: 'Contraseña'),
                 obscureText: true,
-                //validator: Validators.passwordValidator,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Este campo es obligatorio';
+                  }
+                  if (value.length < 6) {
+                    return 'La contraseña debe tener al menos 6 caracteres';
+                  }
+                  return null;
+                },
               ),
               SizedBox(height: 16),
 
@@ -60,12 +71,12 @@ class RegisterScreen extends StatelessWidget {
 
                     // Registrar al usuario
                     try {
-                      final success = await AuthService.register(
-                        formData['username'], // Este valor se enviará como 'user_name'
-                        formData['password'], // Este valor se enviará como 'user_password'
+                      final result = await AuthService.register(
+                        formData['username'],
+                        formData['password'],
                       );
 
-                      if (success) {
+                      if (result['success']) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Registro exitoso')),
                         );
@@ -88,7 +99,6 @@ class RegisterScreen extends StatelessWidget {
                     }
                   }
                 },
-
                 child: Text('Registrarse'),
               ),
             ],

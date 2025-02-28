@@ -12,7 +12,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Fondo blanco para un diseño limpio
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -20,10 +20,9 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Logo o imagen de encabezado
               SizedBox(height: 50),
               Image.asset(
-                'assets/images/login_icon.jpg', // Reemplaza con tu logo o imagen
+                'assets/images/login_icon.jpg',
                 height: 200,
                 width: 200,
               ),
@@ -63,11 +62,12 @@ class LoginScreen extends StatelessWidget {
               // Botón de inicio de sesión
               ElevatedButton(
                 onPressed: () async {
-                  final success = await AuthService.login(
+                  final result = await AuthService.login(
                     _usernameController.text,
                     _passwordController.text,
                   );
-                  if (success) {
+
+                  if (result['success']) {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (_) => HomeScreen()),
@@ -83,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  backgroundColor: Colors.blue, // Color del botón
+                  backgroundColor: Colors.blue,
                 ),
                 child: Text(
                   'Iniciar Sesión',
