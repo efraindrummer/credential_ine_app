@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ine_credential_app/models/ine_credential_model.dart';
 import 'package:ine_credential_app/screens/ine_detail_screen.dart';
 import '../services/api_service.dart';
 
@@ -16,14 +17,20 @@ class HomeScreen extends StatelessWidget {
           if (snapshot.hasError) {
             return Center(child: Text('Error al cargar datos'));
           }
-          final credentials = snapshot.data as List<dynamic>;
+
+          // Convertir los datos JSON en una lista de IneCredentialModel
+          final credentials =
+              (snapshot.data as List<dynamic>)
+                  .map((json) => IneCredentialModel.fromJson(json))
+                  .toList();
+
           return ListView.builder(
             itemCount: credentials.length,
             itemBuilder: (context, index) {
               final credential = credentials[index];
               return ListTile(
-                title: Text(credential['full_name']),
-                subtitle: Text(credential['curp']),
+                title: Text(credential.fullName),
+                subtitle: Text(credential.curp),
                 onTap: () {
                   Navigator.push(
                     context,

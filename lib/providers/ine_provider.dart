@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/api_service.dart';
-import '../models/inde_credential_model.dart';
+import '../models/ine_credential_model.dart';
 
 class IneProvider with ChangeNotifier {
   List<IneCredentialModel> _credentials = [];

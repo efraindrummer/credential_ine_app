@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'https://credential-ine-backend.onrender.com/api';
+  static const String baseUrl =
+      'https://credential-ine-backend.onrender.com/api/ine';
 
   static Future<bool> login(String username, String password) async {
     final response = await http.post(

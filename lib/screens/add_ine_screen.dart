@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../models/inde_credential_model.dart';
+import '../models/ine_credential_model.dart';
 import '../services/api_service.dart';
 import '../utils/validators.dart';
 

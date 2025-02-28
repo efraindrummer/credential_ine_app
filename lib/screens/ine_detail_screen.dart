@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/inde_credential_model.dart';
+import '../models/ine_credential_model.dart';
 
 class IneDetailScreen extends StatelessWidget {
   final IneCredentialModel credential;
