@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart'; // Importa el paquete camera
 import 'package:ine_credential_app/screens/home_screen.dart';
 import 'register_screen.dart';
 import '../services/auth_service.dart';
@@ -6,8 +7,12 @@ import '../services/auth_service.dart';
 class LoginScreen extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final List<CameraDescription> cameras; // Recibe las cámaras como parámetro
 
-  LoginScreen({super.key});
+  LoginScreen({
+    super.key,
+    required this.cameras,
+  }); // Constructor con cámaras requeridas
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +25,13 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               Image.asset(
                 'assets/images/login_icon.jpg',
                 height: 200,
                 width: 200,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               // Campo de nombre de usuario
               TextField(
@@ -36,12 +41,12 @@ class LoginScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  prefixIcon: Icon(Icons.person, color: Colors.blue),
+                  prefixIcon: const Icon(Icons.person, color: Colors.blue),
                   filled: true,
                   fillColor: Colors.grey[200],
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Campo de contraseña
               TextField(
@@ -52,12 +57,12 @@ class LoginScreen extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
-                  prefixIcon: Icon(Icons.lock, color: Colors.blue),
+                  prefixIcon: const Icon(Icons.lock, color: Colors.blue),
                   filled: true,
                   fillColor: Colors.grey[200],
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Botón de inicio de sesión
               ElevatedButton(
@@ -70,33 +75,38 @@ class LoginScreen extends StatelessWidget {
                   if (result['success']) {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (_) => HomeScreen()),
+                      MaterialPageRoute(
+                        builder:
+                            (_) => HomeScreen(
+                              cameras: cameras,
+                            ), // Pasa las cámaras
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Credenciales incorrectas')),
+                      const SnackBar(content: Text('Credenciales incorrectas')),
                     );
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   backgroundColor: Colors.blue,
                 ),
-                child: Text(
+                child: const Text(
                   'Iniciar Sesión',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Enlace para registrarse
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("¿No tienes cuenta? "),
+                  const Text("¿No tienes cuenta? "),
                   TextButton(
                     onPressed: () {
                       Navigator.push(
@@ -104,7 +114,7 @@ class LoginScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (_) => RegisterScreen()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'Registrarse',
                       style: TextStyle(
                         color: Colors.blue,
