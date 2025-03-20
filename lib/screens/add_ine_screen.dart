@@ -3,7 +3,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:camera/camera.dart';
-import 'package:intl/intl.dart'; // Importa intl
+import 'package:intl/intl.dart';
 import '../models/ine_credential_model.dart';
 import '../services/api_service.dart';
 import '../utils/validators.dart';
@@ -22,6 +22,7 @@ class _AddIneScreenState extends State<AddIneScreen> {
   File? _frontImage;
   File? _backImage;
 
+  // Seleccionar imagen desde galería
   Future<void> _pickImage(ImageSource source, bool isFront) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
@@ -36,6 +37,7 @@ class _AddIneScreenState extends State<AddIneScreen> {
     }
   }
 
+  // Capturar datos desde la cámara
   Future<void> _captureIneData(bool isFront) async {
     final result = await Navigator.push(
       context,
@@ -56,8 +58,9 @@ class _AddIneScreenState extends State<AddIneScreen> {
     }
   }
 
+  // Llenar el formulario con datos extraídos
   void _fillFormWithData(Map<String, dynamic> data) {
-    final dateFormat = DateFormat('dd-MM-yyyy'); // Formato de entrada
+    final dateFormat = DateFormat('dd-MM-yyyy');
 
     _formKey.currentState?.patchValue({
       'full_name': data['full_name'] ?? '',
@@ -100,7 +103,7 @@ class _AddIneScreenState extends State<AddIneScreen> {
                   decoration: const InputDecoration(
                     labelText: 'Nombre completo',
                   ),
-                  validator: Validators.requiredValidator,
+                  validator: Validators.fullNameValidator,
                 ),
                 const SizedBox(height: 16),
                 FormBuilderTextField(
@@ -109,8 +112,99 @@ class _AddIneScreenState extends State<AddIneScreen> {
                   validator: Validators.curpValidator,
                 ),
                 const SizedBox(height: 16),
-
-                // Otros campos...
+                FormBuilderDateTimePicker(
+                  name: 'birth_date',
+                  inputType: InputType.date,
+                  decoration: const InputDecoration(
+                    labelText: 'Fecha de nacimiento',
+                  ),
+                  validator: Validators.dateValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderDropdown<String>(
+                  name: 'gender',
+                  decoration: const InputDecoration(labelText: 'Género'),
+                  items:
+                      ['M', 'F']
+                          .map(
+                            (gender) => DropdownMenuItem(
+                              value: gender,
+                              child: Text(
+                                gender == 'M' ? 'Masculino' : 'Femenino',
+                              ),
+                            ),
+                          )
+                          .toList(),
+                  validator: Validators.genderValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'federal_entity',
+                  decoration: const InputDecoration(
+                    labelText: 'Entidad federativa',
+                  ),
+                  validator: Validators.federalEntityValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'voter_key',
+                  decoration: const InputDecoration(
+                    labelText: 'Clave de elector',
+                  ),
+                  validator: Validators.voterKeyValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'ocr_code',
+                  decoration: const InputDecoration(labelText: 'Código OCR'),
+                  validator: Validators.ocrCodeValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderDateTimePicker(
+                  name: 'expiration_date',
+                  inputType: InputType.date,
+                  decoration: const InputDecoration(
+                    labelText: 'Fecha de vigencia',
+                  ),
+                  validator: Validators.dateValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'street',
+                  decoration: const InputDecoration(labelText: 'Calle'),
+                  validator: Validators.streetValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'house_number',
+                  decoration: const InputDecoration(labelText: 'Número'),
+                  validator: Validators.houseNumberValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'neighborhood',
+                  decoration: const InputDecoration(labelText: 'Colonia'),
+                  validator: Validators.neighborhoodValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'municipality',
+                  decoration: const InputDecoration(labelText: 'Municipio'),
+                  validator: Validators.municipalityValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'state',
+                  decoration: const InputDecoration(labelText: 'Estado'),
+                  validator: Validators.stateValidator,
+                ),
+                const SizedBox(height: 16),
+                FormBuilderTextField(
+                  name: 'zip_code',
+                  decoration: const InputDecoration(labelText: 'Código postal'),
+                  validator: Validators.zipCodeValidator,
+                ),
+                const SizedBox(height: 16),
                 const Text('Foto frontal de la credencial'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -125,9 +219,12 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ],
                 ),
-                if (_frontImage != null) Image.file(_frontImage!, height: 100),
+                if (_frontImage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Image.file(_frontImage!, height: 100),
+                  ),
                 const SizedBox(height: 16),
-
                 const Text('Foto trasera de la credencial'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -142,12 +239,26 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ],
                 ),
-                if (_backImage != null) Image.file(_backImage!, height: 100),
+                if (_backImage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Image.file(_backImage!, height: 100),
+                  ),
                 const SizedBox(height: 16),
-
                 ElevatedButton(
                   onPressed: () async {
                     if (_formKey.currentState?.saveAndValidate() ?? false) {
+                      if (_frontImage == null || _backImage == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Por favor captura o selecciona ambas fotos',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+
                       final formData = _formKey.currentState!.value;
                       final ineCredential = IneCredentialModel(
                         fullName: formData['full_name'],
@@ -164,13 +275,15 @@ class _AddIneScreenState extends State<AddIneScreen> {
                         municipality: formData['municipality'],
                         state: formData['state'],
                         zipCode: formData['zip_code'],
-                        photoUrlInverse: _frontImage?.path,
-                        photoUrlReverse: _backImage?.path,
+                        photoUrlInverse: _frontImage!.path,
+                        photoUrlReverse: _backImage!.path,
                       );
 
                       try {
-                        await ApiService.addIneCredential(
-                          ineCredential.toJson(),
+                        await ApiService.addIneCredentialWithFiles(
+                          ineCredential,
+                          _frontImage!,
+                          _backImage!,
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -180,8 +293,8 @@ class _AddIneScreenState extends State<AddIneScreen> {
                         Navigator.pop(context);
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Error al agregar la credencial'),
+                          SnackBar(
+                            content: Text('Error al agregar la credencial: $e'),
                           ),
                         );
                       }
