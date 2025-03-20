@@ -43,7 +43,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
         builder: (context) => CaptureScreen(cameras: widget.cameras),
       ),
     );
-
     if (result != null && result is Map<String, dynamic>) {
       setState(() {
         if (isFront) {
@@ -148,7 +147,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   // Sección de Datos de la Credencial
                   Card(
                     elevation: 4,
@@ -188,7 +186,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   // Sección de Dirección
                   Card(
                     elevation: 4,
@@ -244,7 +241,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-
                   // Sección de Fotos
                   Card(
                     elevation: 4,
@@ -273,7 +269,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-
                   // Botón de Guardar
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -315,7 +310,6 @@ class _AddIneScreenState extends State<AddIneScreen> {
                           photoUrlInverse: _frontImage!.path,
                           photoUrlReverse: _backImage!.path,
                         );
-
                         try {
                           await ApiService.addIneCredentialWithFiles(
                             ineCredential,

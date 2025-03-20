@@ -50,29 +50,24 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (!_controller.value.isInitialized) return;
     final image = await _controller.takePicture();
     final croppedImage = await _cropToCredential(File(image.path));
-
     final inputImage = InputImage.fromFilePath(croppedImage.path);
     final textRecognizer = TextRecognizer();
     final recognizedText = await textRecognizer.processImage(inputImage);
 
     setState(() {
-      extractedText =
-          recognizedText.text; // Guardar el texto extraído para depuración
+      extractedText = recognizedText.text;
       if (isFront) {
         _frontImage = croppedImage;
       } else {
         _backImage = croppedImage;
       }
       extractedData = _parseIneText(extractedText);
-      print(
-        'Texto extraído:\n$extractedText',
-      ); // Imprimir en consola para depuración
+      print('Texto extraído:\n$extractedText');
       print('Datos parseados:\n$extractedData');
     });
 
     textRecognizer.close();
 
-    // Regresar datos después de capturar el frente
     if (isFront) {
       Navigator.pop(context, {
         'imagePath': _frontImage!.path,
@@ -88,10 +83,8 @@ class _CaptureScreenState extends State<CaptureScreen>
     const credentialAspectRatio = 1.59; // Ancho / Alto de una INE
     final credentialWidth = screenWidth * 0.8;
     final credentialHeight = credentialWidth / credentialAspectRatio;
-
     final x = (image.width - credentialWidth) / 2;
     final y = (image.height - credentialHeight) / 2;
-
     final cropped = img.copyCrop(
       image,
       x: x.round(),
@@ -99,7 +92,6 @@ class _CaptureScreenState extends State<CaptureScreen>
       width: credentialWidth.round(),
       height: credentialHeight.round(),
     );
-
     final croppedFile = File(imageFile.path.replaceAll('.jpg', '_cropped.jpg'));
     await croppedFile.writeAsBytes(img.encodeJpg(cropped));
     return croppedFile;
@@ -110,42 +102,34 @@ class _CaptureScreenState extends State<CaptureScreen>
     final data = <String, dynamic>{};
     String? address;
 
-    // Imprimir cada línea para depuración
-    print('Líneas extraídas:');
-    for (var line in lines) {
-      print(line);
-    }
-
     for (int i = 0; i < lines.length; i++) {
       final line = lines[i].toUpperCase();
 
-      // Nombre completo: varias palabras en mayúsculas, antes de CURP o CLAVE
+      // Nombre completo
       if (RegExp(r'^[A-Z\s]{5,}$').hasMatch(line) &&
           !line.contains('CURP') &&
           !line.contains('CLAVE')) {
-        if (!data.containsKey('full_name')) {
-          data['full_name'] = line;
-        }
+        data['full_name'] = line;
       }
 
-      // CURP: formato estándar
+      // CURP
       if (RegExp(r'[A-Z]{4}\d{6}[A-Z]{6}\d{2}').hasMatch(line)) {
         data['curp'] = line;
       }
 
-      // Fecha de nacimiento: primera fecha en formato DD-MM-YYYY
+      // Fecha de nacimiento
       if (RegExp(r'\d{2}-\d{2}-\d{4}').hasMatch(line) &&
           !data.containsKey('birth_date')) {
         data['birth_date'] = line;
       }
 
-      // Género: 'M' o 'F', o después de "SEXO"
+      // Género
       if (RegExp(r'^(M|F)$').hasMatch(line) || line.contains('SEXO')) {
         data['gender'] =
             line.contains('SEXO') ? line.replaceAll('SEXO', '').trim() : line;
       }
 
-      // Entidad federativa: después de "ENTIDAD" o palabras en mayúsculas
+      // Entidad federativa
       if (line.contains('ENTIDAD') ||
           (RegExp(r'[A-Z]{2,}\s*[A-Z]{2,}').hasMatch(line) &&
               !data.containsKey('federal_entity'))) {
@@ -155,17 +139,17 @@ class _CaptureScreenState extends State<CaptureScreen>
                 : line;
       }
 
-      // Clave de elector: formato estándar
+      // Clave de elector
       if (RegExp(r'[A-Z]{6}\d{8}[A-Z]').hasMatch(line)) {
         data['voter_key'] = line;
       }
 
-      // Código OCR: secuencia de 10-13 dígitos
+      // Código OCR
       if (RegExp(r'\d{10,13}').hasMatch(line)) {
         data['ocr_code'] = line;
       }
 
-      // Fecha de vigencia: después de "VIGENCIA" o segunda fecha
+      // Fecha de vigencia
       if (line.contains('VIGENCIA') ||
           (RegExp(r'\d{2}-\d{2}-\d{4}').hasMatch(line) &&
               data.containsKey('birth_date'))) {
@@ -175,7 +159,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                 : line;
       }
 
-      // Dirección: acumular líneas después de "DOMICILIO" o "CALLE"
+      // Dirección
       if (line.contains('DOMICILIO') ||
           line.contains('CALLE') ||
           RegExp(r'[A-Z0-9\s]+').hasMatch(line)) {
@@ -248,9 +232,11 @@ class _CaptureScreenState extends State<CaptureScreen>
         _frontImage!,
         _backImage!,
       );
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Credencial guardada exitosamente')),
       );
+
       Navigator.pop(context, {
         'imagePath': _frontImage!.path,
         'extractedData': extractedData,
@@ -322,6 +308,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ),
                 ),
               ),
+
               // Botones
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -340,6 +327,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ],
                 ),
               ),
+
               // Imágenes capturadas
               if (_frontImage != null || _backImage != null)
                 SizedBox(
@@ -360,6 +348,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                     ],
                   ),
                 ),
+
               // Texto extraído para depuración
               if (extractedText.isNotEmpty)
                 SizedBox(
@@ -372,6 +361,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                     ),
                   ),
                 ),
+
               // Botón de guardar
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
